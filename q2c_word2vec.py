@@ -150,7 +150,7 @@ def skipgram(current_center_word, outside_words, word2ind,
     grad_center_vecs = np.zeros(center_word_vectors.shape)
     grad_outside_vectors = np.zeros(outside_vectors.shape)
 
-        # Get the index of the center word
+    # Get the index of the center word
     center_word_idx = word2ind[current_center_word]
     
     # Get the vector for the center word
