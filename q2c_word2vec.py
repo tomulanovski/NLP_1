@@ -83,7 +83,6 @@ def neg_sampling_loss_and_gradient(
     neg_sample_word_indices = get_negative_samples(outside_word_idx, dataset, K)
     indices = [outside_word_idx] + neg_sample_word_indices
     outside_vectors_sampled = outside_vectors[indices]
-    
     dot_product = np.dot(outside_vectors_sampled, center_word_vec)
     
     # Split into positive sample and negative samples
@@ -151,12 +150,32 @@ def skipgram(current_center_word, outside_words, word2ind,
     grad_center_vecs = np.zeros(center_word_vectors.shape)
     grad_outside_vectors = np.zeros(outside_vectors.shape)
 
-    ### YOUR CODE HERE
-    raise NotImplementedError
-    ### END YOUR CODE
-
+        # Get the index of the center word
+    center_word_idx = word2ind[current_center_word]
+    
+    # Get the vector for the center word
+    center_word_vec = center_word_vectors[center_word_idx]
+    
+    # For each outside word in the context window
+    for outside_word in outside_words:
+        # Get the index of the outside word
+        outside_word_idx = word2ind[outside_word]
+        
+        # Calculate loss and gradients using the specified loss function
+        current_loss, grad_center, grad_outside = word2vec_loss_and_gradient(
+            center_word_vec, outside_word_idx, outside_vectors, dataset)
+        
+        # Accumulate the loss
+        loss += current_loss
+        
+        # Accumulate the gradient for the center word vector
+        # Note: We only update the row corresponding to the current center word
+        grad_center_vecs[center_word_idx] += grad_center
+        
+        # Accumulate the gradients for all outside word vectors
+        grad_outside_vectors += grad_outside
+    
     return loss, grad_center_vecs, grad_outside_vectors
-
 
 #############################################
 # Testing functions below. DO NOT MODIFY!   #
